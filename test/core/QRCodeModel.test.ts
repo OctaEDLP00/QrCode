@@ -1,93 +1,74 @@
+import { describe, it, expect } from 'vitest'
 import { QRCodeModel } from '../../src/core/QRCodeModel.js'
-import { describe, it } from 'vitest'
+import { QrErrorCorrectLevel } from '../../src/types/index.d.js'
 
 describe('QRCodeModel', () => {
-	it('should be able to be instantiated', () => {
-		const model = new QRCodeModel(1)
-		console.assert(model instanceof QRCodeModel, 'model should be an instance of QRCodeModel')
-	})
+  it('should be able to be instantiated', () => {
+    const model = new QRCodeModel(1, QrErrorCorrectLevel.L)
+    expect(model).toBeInstanceOf(QRCodeModel)
+  })
 
-	it('should return correct module count', () => {
-		const model = new QRCodeModel(5)
-		console.assert(model.getModuleCount() === 21, 'module count for version 5 should be 21')
-	})
-	it('should set and get modules correctly', () => {
-		const model = new QRCodeModel(2)
-		model.setModule(0, 0, true)
-		console.assert(model.getModule(0, 0) === true, 'module (0,0) should be true')
-		model.setModule(1, 1, false)
-		console.assert(model.getModule(1, 1) === false, 'module (1,1) should be false')
-	})
+  it('should return correct module count', () => {
+    const version = 5
+    const model = new QRCodeModel(version, QrErrorCorrectLevel.M)
+    model.make()
+    const expectedSize = (version - 1) * 4 + 21
+    expect(model.getModuleCount()).toBe(expectedSize)
+  })
 
-	it('should handle out-of-bounds module access gracefully', () => {
-		const model = new QRCodeModel(1)
-		try {
-			model.setModule(-1, 0, true)
-			console.assert(false, 'should have thrown an error for negative x index')
-		} catch (e) {
-			console.assert(true, 'correctly threw an error for negative x index')
-		}
-		try {
-			model.getModule(0, 21)
-			console.assert(false, 'should have thrown an error for out-of-bounds y index')
-		} catch (e) {
-			console.assert(true, 'correctly threw an error for out-of-bounds y index')
-		}
-	})
+  it('should have dark modules after adding data and making', () => {
+    const model = new QRCodeModel(3, QrErrorCorrectLevel.L)
+    model.addData('https://github.com/OctaEDLP00/qrx')
+    model.make()
+
+    // El Finder Pattern (0,0) siempre debe ser oscuro tras el make()
+    expect(model.isDark(0, 0)).toBe(true)
+  })
+
+  it('should handle out-of-bounds module access gracefully', () => {
+    const model = new QRCodeModel(1, QrErrorCorrectLevel.L)
+    model.make()
+    const size = model.getModuleCount()
+
+    // Validamos que lance el error de coordenadas fuera de rango
+    expect(() => model.isDark(-1, 0)).toThrow(/out of bounds/)
+    expect(() => model.isDark(size, size)).toThrow(/out of bounds/)
+  })
 })
 
 describe('QRCodeModel Edge Cases', () => {
-	it('should handle version 1 correctly', () => {
-		// acá se le pasan dos parametros
-		const model = new QRCodeModel(1)
-		console.assert(model.getModuleCount() === 21, 'module count for version 1 should be 21')
-	})
+  it('should handle version 1 correctly', () => {
+    const model = new QRCodeModel(1, QrErrorCorrectLevel.L)
+    model.make()
+    expect(model.getModuleCount()).toBe(21)
+  })
 
-	it('should handle maximum version (40) correctly', () => {
-		// acá se le pasan dos parametros
-		const model = new QRCodeModel(40)
-		console.assert(model.getModuleCount() === 177, 'module count for version 40 should be 177')
-	})
+  it('should handle maximum supported version (10) correctly', () => {
+    const maxSupported = 10
+    const model = new QRCodeModel(maxSupported, QrErrorCorrectLevel.H)
+    model.make()
+    const expectedSize = (maxSupported - 1) * 4 + 21
+    expect(model.getModuleCount()).toBe(expectedSize)
+  })
 
-	it('should correctly initialize all modules to false', () => {
-		// acá se le pasan dos parametros
-		const model = new QRCodeModel(3)
-		const size = model.getModuleCount()
-		let allFalse = true
-		for (let y = 0; y < size; y++) {
-			for (let x = 0; x < size; x++) {
-				// esto no existe
-				if (model.getModule(x, y) !== false) {
-					allFalse = false
-					break
-				}
-			}
-			if (!allFalse) break
-		}
-		console.assert(allFalse, 'all modules should be initialized to false')
-	})
+  it('should correctly initialize modules and respond to isDark', () => {
+    const model = new QRCodeModel(3, QrErrorCorrectLevel.M)
+    model.addData('test')
+    model.make()
 
-	it('should handle setting all modules to true', () => {
-		// acá se le pasan dos parametros
-		const model = new QRCodeModel(2)
-		const size = model.getModuleCount()
-		for (let y = 0; y < size; y++) {
-			for (let x = 0; x < size; x++) {
-				// esto no existe
-				model.setModule(x, y, true)
-			}
-		}
-		let allTrue = true
-		for (let y = 0; y < size; y++) {
-			for (let x = 0; x < size; x++) {
-				// esto no existe getModule()
-				if (model.getModule(x, y) !== true) {
-					allTrue = false
-					break
-				}
-				if (!allTrue) break
-			}
-			console.assert(allTrue, 'all modules should be set to true')
-		}
-	})
+    const size = model.getModuleCount()
+    let hasDarkPixel = false
+
+    // Buscamos al menos un píxel oscuro en la matriz generada
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (model.isDark(r, c)) {
+          hasDarkPixel = true
+          break
+        }
+      }
+      if (hasDarkPixel) break
+    }
+    expect(hasDarkPixel).toBe(true)
+  })
 })
