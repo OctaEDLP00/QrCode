@@ -1,6 +1,6 @@
 {
   "name": "@qr-render/qrcode",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The modern, zero-dependency successor to qrcodejs. Built in TypeScript for the web, focusing on performance and type-safety for Canvas rendering",
   "keywords": [
     "canvas",
@@ -34,8 +34,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
     },
     "./package.json": "./package.json"
   },
