@@ -43,7 +43,7 @@ if [[ "$VERSION" == *"-"* ]]; then
     if [[ "$VERSION" =~ -([a-zA-Z]+) ]]; then
         NPM_TAG="${BASH_REMATCH[1]}"
     else
-        NPM_TAG="next" # Fallback por seguridad
+        NPM_TAG="latest" # Fallback por seguridad
     fi
 fi
 # -------------------------------------------
