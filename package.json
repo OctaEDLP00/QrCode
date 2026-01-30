@@ -1,75 +1,74 @@
 {
-	"name": "@qrx/qrcode",
-	"version": "0.0.1",
-	"description": "The modern, zero-dependency successor to qrcodejs. Built in TypeScript for the web, focusing on performance and type-safety for Canvas rendering",
-	"keywords": [
-		"canvas",
-		"ems",
-		"qrcode",
-		"tree-shaking",
-		"typescript",
-		"web",
-		"zero-dependency"
-	],
-	"homepage": "https://github.com/OctaEDLP00/QrCode#readme",
-	"bugs": {
-		"url": "https://github.com/OctaEDLP00/QrCode/issues"
-	},
-	"license": "MIT",
-	"author": "OctaEDLP00",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/OctaEDLP00/QrCode.git"
-	},
-	"files": [
-		"dist",
-		"README.md",
-		"LICENSE",
-		"package.json",
-		"tsconfig.json"
-	],
-	"type": "module",
-	"browser": "./index.browser.js",
-	"types": "./index.d.ts",
-	"exports": {
-		".": {
-			"types": "./index.d.ts",
-			"import": "./index.js",
-			"default": "./index.js"
-		},
-		"./package.json": "./package.json"
-	},
-	"scripts": {
-		"build": "tsup",
-		"format": "prettier --write \"src/**/*.ts\" \"*.{js,json,md}\"",
-		"format:check": "prettier --check \"src/**/*.ts\" \"*.{js,json,md}\"",
-		"lint": "oxlint src/**/*.ts",
-		"lint:fix": "oxlint src/**/*.ts --fix",
-		"fmt": "oxfmt",
-		"fmt:check": "oxfmt --check",
-		"prepublishOnly": "pnpm run build && pnpm run test:run && pnpm run lint",
-		"test": "vitest",
-		"test:coverage": "vitest run --coverage",
-		"test:run": "vitest run",
-		"test:ui": "vitest --ui",
-		"type-check": "tsc --noEmit"
-	},
-	"devDependencies": {
-		"@types/node": "25.0.10",
-		"@vitest/coverage-v8": "4.0.18",
-		"@vitest/ui": "4.0.18",
-		"happy-dom": "20.3.7",
-		"oxfmt": "^0.27.0",
-		"oxlint": "1.42.0",
-		"tsup": "8.5.1",
-		"tsx": "4.21.0",
-		"typescript": "5.9.3",
-		"vitest": "4.0.18",
-		"vitest-canvas-mock": "^1.1.3"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
-	}
+  "name": "@qr-render/qrcode",
+  "version": "0.0.1",
+  "description": "The modern, zero-dependency successor to qrcodejs. Built in TypeScript for the web, focusing on performance and type-safety for Canvas rendering",
+  "keywords": [
+    "canvas",
+    "ems",
+    "qrcode",
+    "tree-shaking",
+    "typescript",
+    "web",
+    "zero-dependency"
+  ],
+  "homepage": "https://github.com/OctaEDLP00/QrCode#readme",
+  "bugs": {
+    "url": "https://github.com/OctaEDLP00/QrCode/issues"
+  },
+  "license": "MIT",
+  "author": "OctaEDLP00",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OctaEDLP00/QrCode.git"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json",
+    "tsconfig.json"
+  ],
+  "type": "module",
+  "browser": "./index.browser.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "format": "prettier --write \"src/**/*.ts\" \"*.{js,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"*.{js,json,md}\"",
+    "lint": "oxlint src/**/*.ts",
+    "lint:fix": "oxlint src/**/*.ts --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.10",
+    "@vitest/coverage-v8": "4.0.18",
+    "@vitest/ui": "4.0.18",
+    "happy-dom": "20.3.7",
+    "oxfmt": "^0.27.0",
+    "oxlint": "1.42.0",
+    "tsup": "8.5.1",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18",
+    "vitest-canvas-mock": "^1.1.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
 }
