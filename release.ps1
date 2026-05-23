@@ -26,8 +26,7 @@ function Write-PackageName (
     [string]$BracketColor = "Blue",
     [Parameter(Mandatory = $false)]
     [string]$TextColor = "Cyan"
-)
-{
+) {
     Write-Color -Text "[", "$Name", "]" -Color $BracketColor, $TextColor, $BracketColor -NoNewline
 }
 
@@ -37,8 +36,7 @@ if (
     !$Version -and
     !$CmtMessage -and
     !$TagMessage
-)
-{
+) {
     Write-Color -Text "❌ ERROR: ", "Faltan argumentos." -Color Red, Gray
     Write-Color -Text "Uso correcto: ", ".\release.ps1 ", "-Name ", "<nombre_paquete> ", "-Version ", "<version> ", "-CmtMessage ", "<Commit Msg> ", "-TagMessage ", "<Tag Msg>" `
         -Color Gray, Yellow, Gray, DarkGray, Gray, DarkGray, Gray, DarkGray, Gray, DarkGray
@@ -48,14 +46,13 @@ if (
 }
 
 # ---- LÓGICA DE DETECCIÓN DE PRE-RELEASE ----
-# Detectamos si hay un guion en la versión (ej: 1.0.0-beta.1)
+# Detectamos si hay un guion en la versión (ej: 1.0.0-beta.1)P
 $NPM_TAG = "latest" # Valor por defecto
-if ($Version -match "-([a-zA-Z]+)")
-{
+if ($Version -match "-([a-zA-Z]+)") {
     $NPM_TAG = $Matches[1]
-} else
-{
-    $NPM_TAG = "latest" # Usamos 'next' para versiones estables
+}
+else {
+    $NPM_TAG = "latest"
 }
 # -------------------------------------------
 
@@ -63,12 +60,10 @@ Write-Color -Text "🚀 ", "Iniciando proceso para " -Color Cyan, White -NoNewli
 Write-PackageName -Name $Name -BracketColor Cyan -TextColor DarkCyan
 Write-Color -Text " v$Version" -Color Yellow
 
-try
-{
+try {
     # 1. Validación de Rama
     $currentBranch = git rev-parse --abbrev-ref HEAD
-    if ($currentBranch -ne "main" -and $currentBranch -ne "master")
-    {
+    if ($currentBranch -ne "main" -and $currentBranch -ne "master") {
         throw "No estás en la rama main/master. ¡Proceso abortado!"
     }
 
@@ -103,8 +98,7 @@ try
     git tag -a "v$Version" -m "$TagMessage"
     git push origin $currentBranch --follow-tags
 
-    if (-not $NoPublish)
-    {
+    if (-not $NoPublish) {
         # 7. Publicación en NPM (Paso Final)
         Write-PackageName -Name $Name -BracketColor Cyan -TextColor DarkCyan
         Write-Color -Text " 🚀 Publicando en NPM Registry..." -Color Green
@@ -115,14 +109,14 @@ try
         Write-Color -Text "✅ " -NoNewline
         Write-PackageName -Name $Name -BracketColor Cyan -TextColor DarkCyan
         Write-Color -Text " v$Version ($NPM_TAG) publicada con éxito en GitHub y NPM." -Color Green
-    } else
-    {
+    }
+    else {
         Write-PackageName -Name $Name -BracketColor Yellow -TextColor DarkYellow
         Write-Color -Text " v$Version - Publicación omitida (Dry Run)." -Color Yellow
     }
 
-} catch
-{
+}
+catch {
     Write-Color -Color Red -Text "❌ ERROR: $($_.Exception.Message)"
     exit 1
 }
